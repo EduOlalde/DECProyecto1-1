@@ -10,8 +10,10 @@
     función de cancelar la ejecución por parte del usuario */ 
 function validarOperacion() {
 
+    /* Se solicita escribir la operación mediante prompt, con un mensaje explicativo
+        Se controla que el usuario no haya pulsado el botón cancelar, devolviendo operacion == null.
+        En caso contrario, se  transforma la cadena a minúsculas para simplificar la validación */
     
-    /* Se solicita escribir la operación mediante prompt, con un mensaje explicativo */
     let operacion = prompt("¿Qué operación desea realizar?"
                 + "\n - Suma: suma / +"
                 + "\n - Resta: resta / - "
@@ -20,15 +22,13 @@ function validarOperacion() {
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
                 + "\n\nPara mostrar el historial introduzca \"historial\""
-                + "\n\nPara salir de la calculadora pulse \"cancelar\"");
-    /* Se controla que el usuario no haya pulsado el botón cancelar, devolviendo operacion == null.
-    En caso contrario, se  transforma la cadena a minúsculas para simplificar la validación*/
+                + "\nPara salir de la calculadora pulse \"cancelar\"");
+    
     if(operacion != null)
-        operacion = operacion.toLowerCase();
-    
-    
-    /* Se crea un bucle "while" que se ejecuta si lo introducido por el usuario no es una de las
-        palabras o símbolos válidos para seleccionar una operación, repitiendo el mensaje de petición.
+        operacion = operacion.toLowerCase();    
+        
+        /* Se crea un bucle "while" que se ejecuta si lo introducido por el usuario no es una de las
+        palabras o símbolos válidos para seleccionar una operación, repitiendo la petición.
         Para ello, se utiliza el método "includes()" de String, que devuelve "true" si se incluye
         alguna de los strings aportados al método, y se utiliza la negación (el bucle continua mientras
         no se incluya alguno de los strings)
@@ -37,7 +37,8 @@ function validarOperacion() {
         "raiz", "+", "-", "/", "*", "√", "historial"].includes(operacion)
         && operacion != null)
         {
-            operacion = prompt("¿Qué operación desea realizar?"
+            operacion = prompt("Opción no válida."
+                + "\n\n¿Qué operación desea realizar?"
                 + "\n - Suma: suma / +"
                 + "\n - Resta: resta / - "
                 + "\n - Multiplicacion: multiplicacion / *"
@@ -45,7 +46,7 @@ function validarOperacion() {
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
                 + "\n\nPara mostrar el historial introduzca \"historial\""
-                + "\n\nPara salir de la calculadora pulse \"cancelar\"");
+                + "\nPara salir de la calculadora pulse \"cancelar\"");
                 if(operacion != null)
                     operacion = operacion.toLowerCase();
         }
