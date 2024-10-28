@@ -1,12 +1,19 @@
 Decisiones de diseño:
 
-- Se ha implementado un control de las posibles entradas del usuario, incluyendo cancelaciones para cumplir el requerimiento de utilizar 	prompt() para la entrada de datos y console.log() para la salida.
-- Se implementó un historial de operaciones con un límite de 50 entradas, almacenado en localStorage para persistencia entre sesiones.
-- Se utilizaron funciones para modularizar el código y mejorar la legibilidad y el mantenimiento.
+- Se ha implementado un control de las posibles entradas del usuario, incluyendo cancelaciones para cumplir el requerimiento de utilizar prompt() para la entrada de datos y console.log() para la salida.
+- Se ha implementado un historial de operaciones con un límite de 10 entradas, almacenado en localStorage para persistencia entre sesiones. Esa límite de operaciones se ha elegido para facilitar la demostración de la funcionalidad.
+- Se han utilizado funciones para modularizar el código y mejorar la legibilidad y el mantenimiento, además de separar la validación de la entrada de la ejecución de las operaciones.
 - Se implementó una validación robusta para asegurar que el usuario introduce datos válidos.
+- Se implementó la cancelación de la operación mediante la detección del valor null retornado por prompt() cuando el usuario pulsa "Cancelar".
+
 
 
 Desafíos encontrados:
 
 - La gestión del historial en localStorage requirió la conversión entre arrays y strings.
 - El manejo de la entrada del usuario a través de prompt() es limitante en términos de interfaz de usuario y flujo de ejecución.
+- La validación de la entrada del usuario se volvió más compleja al tener que considerar la posibilidad de cancelación en cada paso.
+- Integrar la funcionalidad de cancelación en el flujo de la aplicación requirió una reestructuración del código y un manejo cuidadoso de los posibles valores de retorno de las funciones.
+- Mantener la claridad del código a pesar de la creciente complejidad de la lógica de la aplicación.
+
+

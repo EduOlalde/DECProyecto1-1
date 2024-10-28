@@ -4,12 +4,13 @@
     con la capacidad de mostrar el historial */
 
 /*  Función de valiadción de la selección de operaciones
-    Esta función se encarga de asegurar que el usuario introduce
-    una selección válida para elegir la operación a realizar*/ 
+    Esta función se encarga de asegurar que el usuario introduce una selección válida para elegir 
+    la operación a realizar.
+    La función retorna el símbolo de una operación o null, que facilita la implementación de la
+    función de cancelar la ejecución por parte del usuario */ 
 function validarOperacion() {
 
     
-
     /* Se solicita escribir la operación mediante prompt, con un mensaje explicativo */
     let operacion = prompt("¿Qué operación desea realizar?"
                 + "\n - Suma: suma / +"
@@ -19,23 +20,21 @@ function validarOperacion() {
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
                 + "\n\nPara mostrar el historial introduzca \"historial\"");
-    /* Se controla que el usuario no haya pulsado el botón cancelar, y en caso contrario se
-    continua la ejecución */
-    if(operacion == null){
-        console.log(`Ejecución cancelada por el usuario.`);
-    }
-    else{
+    /* Se controla que el usuario no haya pulsado el botón cancelar, devolviendo operacion == null.
+    En caso contrario, se  transforma la cadena a minúsculas para simplificar la validación*/
+    if(operacion != null)
         operacion = operacion.toLowerCase();
-    }
     
-
+    
     /* Se crea un bucle "while" que se ejecuta si lo introducido por el usuario no es una de las
         palabras o símbolos válidos para seleccionar una operación, repitiendo el mensaje de petición.
         Para ello, se utiliza el método "includes()" de String, que devuelve "true" si se incluye
-        alguna de los strings aportados al método, y se utiliza la negación (el bucle conginua mientras
-        no se incluya alguno de los strings)*/
+        alguna de los strings aportados al método, y se utiliza la negación (el bucle continua mientras
+        no se incluya alguno de los strings)
+        El bucle también finaliza si el usuario pulsa "cancelar" */
     while(!["suma", "resta", "multiplicacion", "division", 
-        "raiz", "+", "-", "/", "*", "√", "historial"].includes(operacion))
+        "raiz", "+", "-", "/", "*", "√", "historial"].includes(operacion)
+        && operacion != null)
         {
             operacion = prompt("No ha introducido una opción válida. Vuelva a escoger"
                 + "\n - Suma: suma / +"
@@ -45,12 +44,8 @@ function validarOperacion() {
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
                 + "\n\nPara mostrar el historial introduzca \"historial\"");
-                if(operacion == null){
-                    console.log(`Ejecución cancelada por el usuario.`);
-                }
-                else{
+                if(operacion != null)
                     operacion = operacion.toLowerCase();
-                }
         }
 
     /* Para simplificar instrucciones durante el resto de la aplicación, se reasigna el valor
@@ -79,21 +74,37 @@ function validarOperacion() {
 
 /* Función de validación de introducción de números.
     Esta función se encarga de asegurar que el usuario introduce un número. La función
-    muestra un mensaje particular basado en el parámetro introducido */
+    muestra un mensaje particular basado en el parámetro introducido.
+    La función permite retornar un número real o null, facilitando la funcionalidad de
+    cancelación de operación. */
 function validarInput(mensaje){
 
-    /* Se solicita un número mediante prompt, que se recoge en forma de número real
-        utilizando la función parseFloat() */
-    let num = parseFloat(prompt(`${mensaje}`));
+    /* Para implementar la funcionalidad de que el usuario pueda cancelar una operación, 
+    se recoge el número de forma directa, y se evalúa si la variable es == null, lo que
+    quiere decir que el usuario ha pulsado "cancelar" */
+    let num = prompt(`${mensaje}`);
+    if(num == null) {
+        return null;
+    }
+    else{
+        /* En caso contrario se usa la función parseFloat() para recoger lo introducido por el usuario
+        en forma de número real. PAra realizar la validación se utiliza un bucle while que se repite 
+        en caso de que la función isNaN() del número introducido sea true, lo que significa que el 
+        usuario no ha introducido número, en cuyo caso se repite la solicitud */
+        num = parseFloat(num);
+        while(isNaN(num)){
+            num = prompt(`No ha introducido un número, se necesita un número real`);
+            if(num == null) {
+                return null;
+            }
+            else{
+                num = parseFloat(num);
+            }
+        }
+    return num;
 
-    /* Se utiliza un bucle while que se repite en caso de que la función isNaN() del
-        número introducido sea true, lo que significa que el usuario no ha introducido
-        número, en cuyo caso se repite la solicitud al usuario */
-    while(isNaN(num)){
-        num = parseFloat(prompt(`No ha introducido un número, se necesita un número real`));
     }
     
-    return num;
 }
 
 function operacion(num1, num2, tipo){
@@ -200,7 +211,10 @@ function recuperarHistorial(){
 /* Función principal que ejecuta las instrucciones necesarias para la calculadora */
 function calculadora(){
     /* Se declara una variable tipo array en la que se guarda el historial almacenado */
-    let historial = recuperarHistorial();    
+    let historial = recuperarHistorial();
+    
+    /* Una variable controla la finalización de la ejecución de la aplicación por el usuario */
+    let continuarEjecucion = true;
     
     /* Se solicita el tipo de operación a realizar al usuario y y se declaran las variables
     de operandos*/
@@ -208,11 +222,9 @@ function calculadora(){
     let num1;
     let num2;
 
-    /* Puesto que realizar una raíz cuadrada sólo requiere un operando, en ese caso se solicita
-    un sólo número al usuario.
-    En el resto de casos se solicitan los dos.
-    En caso de que el usuario escoja la función historial, no se piden números y se ejecuta la fucnión.
-    Debido a que todos los inputs posibles están controlados, no es necesaria una opción default. */
+    /* Debido a que distintas elecciones del usuario requieren distintas solicitudes de números,
+    se utiliza un switch basado en la variable "tipo", y se solicita un número en el caso de la 
+    raíz cuadrada, dos números en cualquier otra operación, y ninguno si se canceló la ejecución */
     switch(tipo){
         case "√":
             num1 = validarInput(`Introduzca el operando`);
@@ -221,22 +233,36 @@ function calculadora(){
         case "-":
         case "*":
         case "/":
+            /* Se solicitan dos números en caso de que no se pulse "cancelar" en la primera solicitud */
             num1 = validarInput(`Introduza el primer operando`);
-            num2 = validarInput(`Introduzca el segundo operando`);
+            if(num1 != null) num2 = validarInput(`Introduzca el segundo operando`);
             break;
-        case "historial":
-            mostrarHistorial(historial);
-            break;
+        case null:
+            continuarEjecucion = false;
     }   
+
+    /* Con todos los datos recogidos del usuario, se controlan todos los posibles casos en los que no se
+    deba ejecutar la operación con una estructura if/else if */
 
     /* En caso de que el usuario trate de dividir entre 0, se lanzará una alerta informando
     de que esa operación no se puede realizar. En caso contrario, se realizará la operación */
     if(num2 == 0 && (tipo == "/")){
         alert(`No es posible dividir entre 0`);
     }
-    /* Debido a que la opción historial ya ha sido controlada, ejecutamos la operación si se ha
-    elegido cualquier otra opción */
-    else if(tipo != "historial"){
+    /* La opción "historial" ejecuta la función mostrarHistorial() */
+    else if (tipo == "historial"){
+        mostrarHistorial(historial);
+    }
+    /* Si el usuario ha pulsado "cancelar" en la introducción de alguno de los números */
+    else if((tipo != null && tipo != "√") && (num1 == null || num2 == null)){
+        console.log(`Operación cancelada por el usuario.`)
+    }
+    /* En caso de que el usuario cancele la ejecución se muestra un mensaje */
+    else if(tipo == null){
+        console.log(`Ejecución cancelada por el usuario.`);
+    }
+    /* Los casos restantes requieres ejecutar la operación */
+    else{
         /* Se realiza la operación, guardando el resultado en una variable, y se muestra por consola.
         Además, se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
         cuyo formato depende del tipo de operación */
@@ -263,13 +289,15 @@ function calculadora(){
         /* Finalmente se sobreescribe el historial guardado en el almacenamiento local */
         guardarHistorial(historial);
     }
+
+    return continuarEjecucion;
 }
 
 /* Ejecución de la aplicación. Debido a que se requiere que el usuario pueda realizar operaciones
-sin recarga el navegador, se usará un bucle while(true), pese a que esto supone un bucle infinito */
-while(true){    
-    calculadora();
-}
+continuamente sin recarga el navegador, se usará un bucle while.
+Se implemente una funcionalidad que permite al usuario cancelar la ejecución, por lo tanto el bucle
+se ejecuta mientras calculadora retorne "true", lo que ocurre mientras el usuario no pulse "cancelar"*/
+while(calculadora()){}
 
 
 
