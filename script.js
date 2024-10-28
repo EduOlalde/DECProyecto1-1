@@ -13,8 +13,8 @@ function validarOperacion() {
     /* Se solicita escribir la operación mediante prompt, con un mensaje explicativo
         Se controla que el usuario no haya pulsado el botón cancelar, devolviendo operacion == null.
         En caso contrario, se  transforma la cadena a minúsculas para simplificar la validación */
-    
-    let operacion = prompt("¿Qué operación desea realizar?"
+
+    let mensaje = "¿Qué operación desea realizar?"
                 + "\n - Suma: suma / +"
                 + "\n - Resta: resta / - "
                 + "\n - Multiplicacion: multiplicacion / *"
@@ -22,10 +22,14 @@ function validarOperacion() {
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
                 + "\n\nPara mostrar el historial introduzca \"historial\""
-                + "\nPara salir de la calculadora pulse \"cancelar\"");
+                + "\nPara salir de la calculadora pulse \"cancelar\"";
     
-    if(operacion != null)
-        operacion = operacion.toLowerCase();    
+    let operacion = prompt(mensaje);
+    
+    if(operacion != null){
+        operacion = operacion.toLowerCase(); 
+    }
+           
         
         /* Se crea un bucle "while" que se ejecuta si lo introducido por el usuario no es una de las
         palabras o símbolos válidos para seleccionar una operación, repitiendo la petición.
@@ -37,18 +41,11 @@ function validarOperacion() {
         "raiz", "+", "-", "/", "*", "√", "historial"].includes(operacion)
         && operacion != null)
         {
-            operacion = prompt("Opción no válida."
-                + "\n\n¿Qué operación desea realizar?"
-                + "\n - Suma: suma / +"
-                + "\n - Resta: resta / - "
-                + "\n - Multiplicacion: multiplicacion / *"
-                + "\n - Division: division / /"
-                + "\n - Raiz cuadrada: raiz / √"
-                + "\nIntroduzca el nombre (sin tildes) o el símbolo"
-                + "\n\nPara mostrar el historial introduzca \"historial\""
-                + "\nPara salir de la calculadora pulse \"cancelar\"");
-                if(operacion != null)
+            operacion = prompt("Opción no válida.\n\n" + mensaje);
+                if(operacion != null){
                     operacion = operacion.toLowerCase();
+                }
+                    
         }
 
     /* Para simplificar instrucciones durante el resto de la aplicación, se reasigna el valor
@@ -259,16 +256,16 @@ function calculadora(){
     else if (tipo == "historial"){
         mostrarHistorial();
     }
-    /* Si el usuario ha pulsado "cancelar" en la introducción de alguno de los números.
-    En la condición se tienen que controlar las distintas combinaciones posibles */
-    else if(((tipo != null && tipo != "√") && (num1 == null || num2 == null)) || (tipo == "√" && num1 == null)){
-        console.log(`Operación cancelada por el usuario.`)
-    }
     /* En caso de que el usuario cancele la ejecución se muestra un mensaje y se reasigna la 
     variable de control de la ejecución*/
     else if(tipo == null){
         continuarEjecucion = false;
         console.log(`Ejecución cancelada por el usuario.`);
+    }
+    /* Si el usuario ha pulsado "cancelar" en la introducción de alguno de los números.
+    En la condición se tienen que controlar las distintas combinaciones posibles */
+    else if((tipo != "√" && (num1 == null || num2 == null)) || (tipo == "√" && num1 == null)){
+        console.log(`Operación cancelada por el usuario.`)
     }
     /* Los casos restantes requieren ejecutar la operación */
     else{
