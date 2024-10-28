@@ -176,7 +176,9 @@ function raizCuadrada(num){
 }
 
 /* Función que muestra todos los valores del array historial, controlando si está vacío */
-function mostrarHistorial(historial){
+function mostrarHistorial(){
+
+    let historial = recuperarHistorial();
     console.log(`Historial de operaciones:\n`)
     
     if(historial.length != 0){
@@ -213,8 +215,6 @@ function recuperarHistorial(){
 
 /* Función principal que ejecuta las instrucciones necesarias para la calculadora */
 function calculadora(){
-    /* Se declara una variable tipo array en la que se guarda el historial almacenado */
-    let historial = recuperarHistorial();
     
     /* Una variable controla la finalización de la ejecución de la aplicación por el usuario */
     let continuarEjecucion = true;
@@ -256,7 +256,7 @@ function calculadora(){
     }
     /* La opción "historial" ejecuta la función mostrarHistorial() */
     else if (tipo == "historial"){
-        mostrarHistorial(historial);
+        mostrarHistorial();
     }
     /* Si el usuario ha pulsado "cancelar" en la introducción de alguno de los números */
     else if((tipo != null && tipo != "√") && (num1 == null || num2 == null)){
@@ -271,8 +271,10 @@ function calculadora(){
     /* Los casos restantes requieren ejecutar la operación */
     else{
         /* Se realiza la operación, guardando el resultado en una variable, y se muestra por consola.
-        Además, se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
+        Se declara una variable tipo array en la que se guarda el historial almacenado
+        Se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
         cuyo formato depende del tipo de operación */
+        let historial = recuperarHistorial();
         let resultado = operacion(num1, num2, tipo);
         let cadena; 
 

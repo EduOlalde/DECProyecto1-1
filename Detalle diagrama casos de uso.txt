@@ -1,0 +1,27 @@
+Explicación de los Casos de Uso de la Calculadora
+Este documento describe los casos de uso de la aplicación "Calculadora" representados en el diagrama proporcionado.
+
+Actor:
+
+- Usuario: Persona que interactúa con la calculadora para realizar operaciones aritméticas, consultar el historial o cancelar operaciones.
+
+Casos de Uso:
+
+- Realizar operación aritmética:
+
+	Descripción: El usuario introduce una operación aritmética (suma, resta, multiplicación, división o raíz cuadrada) y los operandos necesarios. La calculadora realiza la operación y muestra el resultado al usuario.
+	Incluye: Este caso de uso incluye las operaciones específicas de suma, resta, multiplicación, división y raíz cuadrada, como se muestra en el diagrama. Esto indica que cada operación es un subconjunto del caso de uso general "Realizar operación aritmética".
+
+- Ver Historial:
+	Descripción: El usuario solicita ver el historial de operaciones realizadas. La calculadora muestra una lista de las últimas 50 operaciones realizadas.
+
+- Cancelar operación:
+	Descripción: El usuario decide cancelar la operación aritmética en curso antes de que se complete. Esto puede ocurrir en cualquier momento durante la entrada de datos.
+
+- Cancelar ejecución:
+	Descripción: El usuario decide cancelar la ejecución de la calculadora, terminando la sesión de uso.
+
+Relaciones entre casos de uso:
+
+- El diagrama muestra que "Cancelar operación" puede ocurrir durante la ejecución de "Realizar operación aritmética". Esto significa que el usuario tiene la opción de cancelar la operación en cualquier momento mientras la está realizando.
+- "Cancelar ejecución" se muestra como una opción independiente, lo que indica que el usuario puede salir de la aplicación en cualquier momento, incluso sin haber iniciado una operación.
