@@ -19,7 +19,8 @@ function validarOperacion() {
                 + "\n - Division: division / /"
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
-                + "\n\nPara mostrar el historial introduzca \"historial\"");
+                + "\n\nPara mostrar el historial introduzca \"historial\""
+                + "\n\nPara salir de la calculadora pulse \"cancelar\"");
     /* Se controla que el usuario no haya pulsado el botón cancelar, devolviendo operacion == null.
     En caso contrario, se  transforma la cadena a minúsculas para simplificar la validación*/
     if(operacion != null)
@@ -36,14 +37,15 @@ function validarOperacion() {
         "raiz", "+", "-", "/", "*", "√", "historial"].includes(operacion)
         && operacion != null)
         {
-            operacion = prompt("No ha introducido una opción válida. Vuelva a escoger"
+            operacion = prompt("¿Qué operación desea realizar?"
                 + "\n - Suma: suma / +"
                 + "\n - Resta: resta / - "
                 + "\n - Multiplicacion: multiplicacion / *"
                 + "\n - Division: division / /"
                 + "\n - Raiz cuadrada: raiz / √"
                 + "\nIntroduzca el nombre (sin tildes) o el símbolo"
-                + "\n\nPara mostrar el historial introduzca \"historial\"");
+                + "\n\nPara mostrar el historial introduzca \"historial\""
+                + "\n\nPara salir de la calculadora pulse \"cancelar\"");
                 if(operacion != null)
                     operacion = operacion.toLowerCase();
         }
@@ -93,7 +95,8 @@ function validarInput(mensaje){
         usuario no ha introducido número, en cuyo caso se repite la solicitud */
         num = parseFloat(num);
         while(isNaN(num)){
-            num = prompt(`No ha introducido un número, se necesita un número real`);
+            num = prompt("No ha introducido un número, se necesita un número real."
+                + "\nPulse \"cancelar\" para cancelar la operación.");
             if(num == null) {
                 return null;
             }
@@ -101,8 +104,8 @@ function validarInput(mensaje){
                 num = parseFloat(num);
             }
         }
+    
     return num;
-
     }
     
 }
@@ -166,7 +169,7 @@ function division(num1, num2){
     return resultado;
 }
 
-/* Función que calcula la raíz cuadrada de un números introducido por parámetro y devuelve el resultado*/
+/* Función que calcula la raíz cuadrada de un número introducido por parámetro y devuelve el resultado*/
 function raizCuadrada(num){
     let resultado = Math.sqrt(num);
     return resultado;
@@ -182,7 +185,7 @@ function mostrarHistorial(historial){
         }
     }
     else{
-        console.log(`No se han realizado operaciones.`);
+        console.log(`Aún no se han realizado operaciones.`);
     }
 }
 
@@ -224,21 +227,23 @@ function calculadora(){
 
     /* Debido a que distintas elecciones del usuario requieren distintas solicitudes de números,
     se utiliza un switch basado en la variable "tipo", y se solicita un número en el caso de la 
-    raíz cuadrada, dos números en cualquier otra operación, y ninguno si se canceló la ejecución */
+    raíz cuadrada, y dos números en cualquier otra operación */
     switch(tipo){
         case "√":
-            num1 = validarInput(`Introduzca el operando`);
+            num1 = validarInput("Introduza el operando"
+                + "\nPulse \"cancelar\" para cancelar la operación.");
             break;
         case "+":
         case "-":
         case "*":
         case "/":
-            /* Se solicitan dos números en caso de que no se pulse "cancelar" en la primera solicitud */
-            num1 = validarInput(`Introduza el primer operando`);
-            if(num1 != null) num2 = validarInput(`Introduzca el segundo operando`);
-            break;
-        case null:
-            continuarEjecucion = false;
+            /* Se solicita el segundo número en caso de que no se pulse "cancelar" en la primera solicitud */
+            num1 = validarInput("Introduza el primer operando"
+                + "\nPulse \"cancelar\" para cancelar la operación.");
+            if(num1 != null) 
+                num2 = validarInput("Introduza el segundo operando"
+                    + "\nPulse \"cancelar\" para cancelar la operación.");
+            break;        
     }   
 
     /* Con todos los datos recogidos del usuario, se controlan todos los posibles casos en los que no se
@@ -257,11 +262,13 @@ function calculadora(){
     else if((tipo != null && tipo != "√") && (num1 == null || num2 == null)){
         console.log(`Operación cancelada por el usuario.`)
     }
-    /* En caso de que el usuario cancele la ejecución se muestra un mensaje */
+    /* En caso de que el usuario cancele la ejecución se muestra un mensaje y se reasigna la 
+    variable de control de la ejecución*/
     else if(tipo == null){
+        continuarEjecucion = false;
         console.log(`Ejecución cancelada por el usuario.`);
     }
-    /* Los casos restantes requieres ejecutar la operación */
+    /* Los casos restantes requieren ejecutar la operación */
     else{
         /* Se realiza la operación, guardando el resultado en una variable, y se muestra por consola.
         Además, se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
@@ -269,21 +276,19 @@ function calculadora(){
         let resultado = operacion(num1, num2, tipo);
         let cadena; 
 
-        if(tipo == "√"){
+        if(tipo == "√")
             cadena = `${tipo}${num1} = ${resultado}`;  
-        }
-        else{
+        else
             cadena = `${num1} ${tipo} ${num2} = ${resultado}`;
-        }
+        
         console.log(cadena);
 
-        /* El historial tendrá un límite de 50 operaciones, por lo tanto se elimina el primer elemento 
-        en caso de que la longitud del array sea >= 50. Se usa un bucle while en lugar de una estructura
-        if(historial.lenght == 50) para controlar posibles errores que provoquen que el historial haya
-        superado los 50 elementos, aunque el código no permite esa situación. */ 
-        while(historial.length >= 5){
-            historial.shift();
-        }
+        /* El historial tendrá un límite de 10 operaciones, por lo tanto se elimina el primer elemento 
+        en caso de que la longitud del array sea >= 10. Se usa un bucle while en lugar de una estructura
+        if(historial.lenght == 10) para controlar posibles errores que provoquen que el historial haya
+        superado los 10 elementos, aunque el código no permita esa situación. */ 
+        while(historial.length >= 10) historial.shift();
+        
         historial.push(cadena);
 
         /* Finalmente se sobreescribe el historial guardado en el almacenamiento local */
