@@ -259,8 +259,9 @@ function calculadora(){
     else if (tipo == "historial"){
         mostrarHistorial();
     }
-    /* Si el usuario ha pulsado "cancelar" en la introducción de alguno de los números */
-    else if((tipo != null && tipo != "√") && (num1 == null || num2 == null)){
+    /* Si el usuario ha pulsado "cancelar" en la introducción de alguno de los números.
+    En la condición se tienen que controlar las distintas combinaciones posibles */
+    else if(((tipo != null && tipo != "√") && (num1 == null || num2 == null)) || (tipo == "√" && num1 == null)){
         console.log(`Operación cancelada por el usuario.`)
     }
     /* En caso de que el usuario cancele la ejecución se muestra un mensaje y se reasigna la 
