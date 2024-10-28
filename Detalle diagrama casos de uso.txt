@@ -13,7 +13,7 @@ Casos de Uso:
 	Incluye: Este caso de uso incluye las operaciones específicas de suma, resta, multiplicación, división y raíz cuadrada, como se muestra en el diagrama. Esto indica que cada operación es un subconjunto del caso de uso general "Realizar operación aritmética".
 
 - Ver Historial:
-	Descripción: El usuario solicita ver el historial de operaciones realizadas. La calculadora muestra una lista de las últimas 50 operaciones realizadas.
+	Descripción: El usuario solicita ver el historial de operaciones realizadas. La calculadora muestra una lista de las últimas 10 operaciones realizadas.
 
 - Cancelar operación:
 	Descripción: El usuario decide cancelar la operación aritmética en curso antes de que se complete. Esto puede ocurrir en cualquier momento durante la entrada de datos.
