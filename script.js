@@ -175,7 +175,7 @@ function raizCuadrada(num){
     return resultado;
 }
 
-/* Función que muestra todos los valores del array historial, controlando si está vacío */
+/* Función que muestra todos los valores historial, controlando si está vacío */
 function mostrarHistorial(){
 
     let historial = recuperarHistorial();
