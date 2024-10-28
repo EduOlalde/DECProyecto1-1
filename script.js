@@ -29,8 +29,7 @@ function validarOperacion() {
     if(operacion != null){
         operacion = operacion.toLowerCase(); 
     }
-           
-        
+            
         /* Se crea un bucle "while" que se ejecuta si lo introducido por el usuario no es una de las
         palabras o símbolos válidos para seleccionar una operación, repitiendo la petición.
         Para ello, se utiliza el método "includes()" de String, que devuelve "true" si se incluye
@@ -177,11 +176,11 @@ function raizCuadrada(num){
 function mostrarHistorial(){
 
     let historial = recuperarHistorial();
+
     console.log(`Historial de operaciones:\n`)
-    
     if(historial.length != 0){
-        for(let i = 0; i < historial.length; i++){
-            console.log(`\t${historial[i]}\n`);
+        for(let operacion of historial){
+            console.log(`\t${operacion}\n`);
         }
     }
     else{
@@ -249,7 +248,7 @@ function calculadora(){
 
     /* En caso de que el usuario trate de dividir entre 0, se lanzará una alerta informando
     de que esa operación no se puede realizar. En caso contrario, se realizará la operación */
-    if(num2 == 0 && (tipo == "/")){
+    if(num2 == 0 && tipo == "/"){
         alert(`No es posible dividir entre 0`);
     }
     /* La opción "historial" ejecuta la función mostrarHistorial() */
@@ -269,12 +268,14 @@ function calculadora(){
     }
     /* Los casos restantes requieren ejecutar la operación */
     else{
-        /* Se realiza la operación, guardando el resultado en una variable, y se muestra por consola.
-        Se declara una variable tipo array en la que se guarda el historial almacenado
-        Se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
-        cuyo formato depende del tipo de operación */
+
+        /* Se declara una variable tipo array en la que se guarda el historial almacenado
+        Se realiza la operación, guardando el resultado en una variable. */
         let historial = recuperarHistorial();
         let resultado = operacion(num1, num2, tipo);
+
+        /* Se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
+        cuyo formato depende del tipo de operación, y se muestra por consola. */
         let cadena; 
 
         if(tipo == "√")
