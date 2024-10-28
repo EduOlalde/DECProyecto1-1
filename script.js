@@ -1,6 +1,6 @@
 /* Aplicación que ejecuta una calculadora sencilla basada en el uso de prompt()
     y muestra sus resultados por consola. Guarda un historial de resultados en 
-    el almacenamiento local (localStorage) hasta un límite de 50 operaciones, 
+    el almacenamiento local (localStorage) hasta un límite de 10 operaciones, 
     con la capacidad de mostrar el historial */
 
 /*  Función de valiadción de la selección de operaciones
