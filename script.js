@@ -174,6 +174,8 @@ function mostrarHistorial(){
     let historial = recuperarHistorial();
 
     console.log(`Historial de operaciones:\n`)
+    /*En caso de que el historial no esté vacío (lenght == 0), se ejecuta un bucle for..of que recorre
+    el historial mostrando un mensaje que depende del tipo de operación */
     if(historial.length != 0){
         for(let op of historial){
             if(op.tipoOperacion == "√")
