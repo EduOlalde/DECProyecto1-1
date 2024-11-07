@@ -3,6 +3,24 @@
     el almacenamiento local (localStorage) hasta un límite de 10 operaciones, 
     con la capacidad de mostrar el historial */
 
+    /* Se crea un mapa para agilizar la validación de la selección de operación.
+    Este mapa se utiliza para reasignar la selección del usuario al símbolo de la operación
+    en caso de que introduzca el nombre. Esto se hace para agilizar instrucciones más adelante. */
+
+    const mapaOperaciones = new Map([
+        ["suma", "+"],
+        ["+", "+"],
+        ["resta", "-"],
+        ["-", "-"],
+        ["multiplicacion", "*"],
+        ["*", "*"],
+        ["division", "/"],
+        ["/", "/"],
+        ["raiz", "√"],
+        ["√", "√"],
+        ["historial", "historial"]
+    ]);
+
 /*  Función de valiadción de la selección de operaciones
     Esta función se encarga de asegurar que el usuario introduce una selección válida para elegir 
     la operación a realizar.
@@ -26,55 +44,28 @@ function validarOperacion() {
     
     let operacion = prompt(mensaje);
     
-    if(operacion != null){
-        operacion = operacion.toLowerCase(); 
-    }
+    if(operacion != null) operacion = operacion.toLowerCase(); 
             
         /* Se crea un bucle "while" que se ejecuta si lo introducido por el usuario no es una de las
         palabras o símbolos válidos para seleccionar una operación, repitiendo la petición.
-        Para ello, se utiliza el método "includes()" de String, que devuelve "true" si se incluye
-        alguna de los strings aportados al método, y se utiliza la negación (el bucle continua mientras
-        no se incluya alguno de los strings)
-        El bucle también finaliza si el usuario pulsa "cancelar" */
-    while(!["suma", "resta", "multiplicacion", "division", 
-        "raiz", "+", "-", "/", "*", "√", "historial"].includes(operacion)
-        && operacion != null)
+        Para ello, se utiliza el método "has()" de Map, que devuelve "true" si la cadena introducida
+        por el usuario existe en el mapa
+        El bucle también finaliza si el usuario pulsa "cancelar", lo que devuelve "null" */
+    while(!mapaOperaciones.has(operacion) && operacion != null)
         {
             operacion = prompt("Opción no válida.\n\n" + mensaje);
-                if(operacion != null){
-                    operacion = operacion.toLowerCase();
-                }
-                    
+            if(operacion != null) operacion = operacion.toLowerCase();               
         }
 
-    /* Para simplificar instrucciones durante el resto de la aplicación, se reasigna el valor
-    de la selección a un carácter */
-    switch(operacion){
-        case "suma": 
-            operacion = "+";
-            break;
-        case "resta": 
-            operacion = "-";
-            break;
-        case "multiplicacion": 
-            operacion = "*";
-            break;
-        case "division": 
-            operacion = "/";
-            break;
-        case "raiz": 
-            operacion = "√";
-            break;
-    }
-
-    return operacion;
-
+    /* Se devuelve directamente el símbolo de la operación utilizando el método get() de Map, 
+    o el valor null */
+    return mapaOperaciones.get(operacion) || null;
 }
 
 /* Función de validación de introducción de números.
     Esta función se encarga de asegurar que el usuario introduce un número. La función
     muestra un mensaje particular basado en el parámetro introducido.
-    La función permite retornar un número real o null, facilitando la funcionalidad de
+    Permite retornar un número real o null, facilitando la funcionalidad de
     cancelación de operación. */
 function validarInput(mensaje){
 
@@ -87,7 +78,7 @@ function validarInput(mensaje){
     }
     else{
         /* En caso contrario se usa la función parseFloat() para recoger lo introducido por el usuario
-        en forma de número real. PAra realizar la validación se utiliza un bucle while que se repite 
+        en forma de número real. Para realizar la validación se utiliza un bucle while que se repite 
         en caso de que la función isNaN() del número introducido sea true, lo que significa que el 
         usuario no ha introducido número, en cuyo caso se repite la solicitud */
         num = parseFloat(num);
@@ -107,11 +98,20 @@ function validarInput(mensaje){
     
 }
 
+/* Funciones flecha simplificadas que ejecutan las operaciones y devuelven el resultado */
+const raizCuadrada = (num) => Math.sqrt(num);
+const suma = (num1, num2) => num1 + num2;
+const resta = (num1, num2) => num1 - num2;
+const multiplicacion = (num1, num2) => num1 * num2;
+/* Se controla evitar la división por 0 mediante un operador ternario */
+const division = (num1, num2) => num2 != 0 ? num1 / num2 : "Error: Divisón por cero no permitida";
+
+/* Función que selecciona la operación a realizar */
 function operacion(num1, num2, tipo){
 
     let resultado = 0;
 
-    /* Para seleccionar la operación a realizar se utiliza una estructura switch.
+    /* Para hacer la selección se utiliza una estructura switch.
      */
     switch(tipo){
 
@@ -142,34 +142,30 @@ function operacion(num1, num2, tipo){
 return resultado;
 }
 
-/* Función que suma dos números introducidos por parámetro y devuelve el resultado*/
-function suma(num1, num2){
-    let resultado = num1 + num2;
-    return resultado;
-}
+/* Para cumplir el requisito del proyecto de crear y gestionar objetos, haremos que cada operación del
+historial se guarde en forma de objeto. Este objeto se creará de forma literal */
+function agregarAlHistorial(num1, num2, tipo, resultado) {
+    const operacionObjeto = {
+        operando1: num1,
+        operando2: num2,
+        tipoOperacion: tipo,
+        resultado: resultado,
+        fecha: new Date().toLocaleString() // Pese a que no se utiliza, puede ser útil guardar la fecha y hora de la operación
+    };
 
-/* Función que resta dos números introducidos por parámetro y devuelve el resultado*/
-function resta(num1, num2){
-    let resultado = num1 - num2;
-    return resultado;
-}
+    /* Se declara una variable tipo array en la que se recupera el historial almacenado y se añade la
+    nueva operación */
+    let historial = recuperarHistorial();
+    historial.push(operacionObjeto);
 
-/* Función que multiplica dos números introducidos por parámetro y devuelve el resultado*/
-function multiplicacion(num1, num2){
-    let resultado = num1 * num2;
-    return resultado;
-}
+    /* El historial tendrá un límite de 10 operaciones, por lo tanto se elimina el primer elemento 
+    en caso de que la longitud del array sea >= 10. Se usa un bucle while en lugar de una estructura
+    if(historial.lenght == 10) para controlar posibles errores que provoquen que el historial haya
+    superado los 10 elementos, aunque el código no permita esa situación. */ 
+    while (historial.length > 10) historial.shift();
 
-/* Función que divide dos números introducidos por parámetro y devuelve el resultado*/
-function division(num1, num2){
-    let resultado = num1 / num2;
-    return resultado;
-}
-
-/* Función que calcula la raíz cuadrada de un número introducido por parámetro y devuelve el resultado*/
-function raizCuadrada(num){
-    let resultado = Math.sqrt(num);
-    return resultado;
+    /* Finalmente se guarda el historial en el almacenamiento local */
+    guardarHistorial(historial);
 }
 
 /* Función que muestra todos los valores historial, controlando si está vacío */
@@ -179,8 +175,11 @@ function mostrarHistorial(){
 
     console.log(`Historial de operaciones:\n`)
     if(historial.length != 0){
-        for(let operacion of historial){
-            console.log(`\t${operacion}\n`);
+        for(let op of historial){
+            if(op.tipoOperacion == "√")
+                console.log(`\t${op.tipoOperacion}${op.operando1} = ${op.resultado}`);
+            else
+            console.log(`\t${op.operando2} ${op.tipoOperacion} ${op.operando2} = ${op.resultado}`);
         }
     }
     else{
@@ -191,7 +190,7 @@ function mostrarHistorial(){
 /* Función que guarda el array historial en formato string separado por ";" en el 
 almacenamiento local */
 function guardarHistorial(historial){
-    localStorage.setItem(`historial`, historial.join(";"));
+    localStorage.setItem(`historial`, JSON.stringify(historial));
 }
 
 /*  Función que devuelve un array donde cada elemento es una operación del historial
@@ -200,12 +199,10 @@ function guardarHistorial(historial){
 function recuperarHistorial(){
 
     if(localStorage.getItem(`historial`) != null){
-        let historial = localStorage.getItem(`historial`).split(";");
-        return historial;
+        return JSON.parse(localStorage.getItem(`historial`));
     }
     else{
-        let historial = [];
-        return historial;
+        return [];
     }
 }
 
@@ -224,7 +221,8 @@ function calculadora(){
 
     /* Debido a que distintas elecciones del usuario requieren distintas solicitudes de números,
     se utiliza un switch basado en la variable "tipo", y se solicita un número en el caso de la 
-    raíz cuadrada, y dos números en cualquier otra operación */
+    raíz cuadrada, y dos números en cualquier otra operación. No se hace nada en caso de 
+    introducir la opción "historial" */
     switch(tipo){
         case "√":
             num1 = validarInput("Introduza el operando"
@@ -240,17 +238,17 @@ function calculadora(){
             if(num1 != null) 
                 num2 = validarInput("Introduza el segundo operando"
                     + "\nPulse \"cancelar\" para cancelar la operación.");
-            break;        
-    }   
+    }
 
     /* Con todos los datos recogidos del usuario, se controlan todos los posibles casos en los que no se
     deba ejecutar la operación con una estructura if/else if */
 
     /* En caso de que el usuario trate de dividir entre 0, se lanzará una alerta informando
     de que esa operación no se puede realizar. En caso contrario, se realizará la operación */
+    
     if(num2 == 0 && tipo == "/"){
         alert(`No es posible dividir entre 0`);
-    }
+    }        
     /* La opción "historial" ejecuta la función mostrarHistorial() */
     else if (tipo == "historial"){
         mostrarHistorial();
@@ -268,10 +266,7 @@ function calculadora(){
     }
     /* Los casos restantes requieren ejecutar la operación */
     else{
-
-        /* Se declara una variable tipo array en la que se guarda el historial almacenado
-        Se realiza la operación, guardando el resultado en una variable. */
-        let historial = recuperarHistorial();
+        /* Se realiza la operación, guardando el resultado en una variable. */
         let resultado = operacion(num1, num2, tipo);
 
         /* Se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
@@ -285,20 +280,18 @@ function calculadora(){
         
         console.log(cadena);
 
-        /* El historial tendrá un límite de 10 operaciones, por lo tanto se elimina el primer elemento 
-        en caso de que la longitud del array sea >= 10. Se usa un bucle while en lugar de una estructura
-        if(historial.lenght == 10) para controlar posibles errores que provoquen que el historial haya
-        superado los 10 elementos, aunque el código no permita esa situación. */ 
-        while(historial.length >= 10) historial.shift();
+        /* Finalmente se agrega la nueva operación al historial */
+        agregarAlHistorial(num1, num2, tipo, resultado);
         
-        historial.push(cadena);
-
-        /* Finalmente se sobreescribe el historial guardado en el almacenamiento local */
-        guardarHistorial(historial);
     }
 
     return continuarEjecucion;
 }
+
+/* Se muestra un primer mensaje de bienvenida al usuario, explicando como hacer que la 
+aplicación funcione correctamente */
+alert("Calculadora básica\nLos resultados se mostrarán en consola, pulsar F12 para mostrarla" + 
+    "\n\nPulsar cancelar en primera ejecución y actualizar la página para su correcto funcionamiento");
 
 /* Ejecución de la aplicación. Debido a que se requiere que el usuario pueda realizar operaciones
 continuamente sin recarga el navegador, se usará un bucle while.
