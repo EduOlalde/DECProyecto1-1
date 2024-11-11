@@ -12,10 +12,11 @@ Esta aplicación implementa una calculadora sencilla con las siguientes funciona
 
 1. Abre el archivo `index.html` en tu navegador web.
 2. La aplicación te pedirá que selecciones una operación.
-3. Introduce los operandos según sea necesario.
-4. El resultado se mostrará en la consola del navegador.
-5. Puedes ver el historial de operaciones introduciendo "historial" cuando se te pida la operación.
-6. Puedes cancelar la operación actual o la ejecución de la aplicación pulsando "Cancelar" en cualquier momento.
+3. En la primera ejecución, cancela la operación y recarga la página para el correcto funcionamiento de la consola.
+4. Introduce los operandos según sea necesario.
+5. El resultado se mostrará en la consola del navegador.
+6. Puedes ver el historial de operaciones introduciendo "historial" cuando se te pida la operación.
+7. Puedes cancelar la operación actual o la ejecución de la aplicación pulsando "Cancelar" en cualquier momento.
 
 ## Limitaciones
 
