@@ -181,7 +181,7 @@ function mostrarHistorial(){
             if(op.tipoOperacion == "√")
                 console.log(`\t${op.tipoOperacion}${op.operando1} = ${op.resultado}`);
             else
-            console.log(`\t${op.operando2} ${op.tipoOperacion} ${op.operando2} = ${op.resultado}`);
+            console.log(`\t${op.operando1} ${op.tipoOperacion} ${op.operando2} = ${op.resultado}`);
         }
     }
     else{
@@ -189,23 +189,43 @@ function mostrarHistorial(){
     }
 }
 
-/* Función que guarda el array historial en formato string separado por ";" en el 
-almacenamiento local */
+/* Para controlar la posibilidad de que localStorage no esté disponible, se crea una función 
+que comprueba su disponibilidad, y devuelve true or false */
+function localStorageDisponible() {
+    try {
+        localStorage.setItem("test", "test");
+        localStorage.removeItem("test");
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+/* Se declara una variable global donde se guarará el historial durante la sesión en 
+caso de que localStorage no esté disponible */
+let historialTemporal = [];
+
+/* Función que guarda el array historial serializando el array historial */
 function guardarHistorial(historial){
-    localStorage.setItem(`historial`, JSON.stringify(historial));
+    if(localStorageDisponible())
+        localStorage.setItem(`historial`, JSON.stringify(historial));
+    else
+        historialTemporal = historial;
 }
 
 /*  Función que devuelve un array donde cada elemento es una operación del historial
-    guardado en el almacenamiento local (localStorage)
+    deserializando la cadena guardada en el almacenamiento local (localStorage) 
     Si no existe el historial, se devuelve un array vacío */
 function recuperarHistorial(){
 
-    if(localStorage.getItem(`historial`) != null){
-        return JSON.parse(localStorage.getItem(`historial`));
+    if(localStorageDisponible()){
+        if(localStorage.getItem(`historial`) != null) 
+            return JSON.parse(localStorage.getItem(`historial`));
+        else 
+            return [];
     }
-    else{
-        return [];
-    }
+    else
+        return historialTemporal;
+    
 }
 
 
@@ -295,10 +315,14 @@ aplicación funcione correctamente */
 alert("Calculadora básica\nLos resultados se mostrarán en consola, pulsar F12 para mostrarla" + 
     "\n\nPulsar cancelar en primera ejecución y actualizar la página para su correcto funcionamiento");
 
+/* Mensaje en caso de que no se pueda acceder al localStorage */
+if(!localStorageDisponible()) 
+    console.log("localStorage no disponible. No se guardará el historial entre sesiones.");
+
 /* Ejecución de la aplicación. Debido a que se requiere que el usuario pueda realizar operaciones
 continuamente sin recarga el navegador, se usará un bucle while.
 Se implemente una funcionalidad que permite al usuario cancelar la ejecución, por lo tanto el bucle
-se ejecuta mientras calculadora retorne "true", lo que ocurre mientras el usuario no pulse "cancelar"*/
+se ejecuta mientras calculadora retorne "true", lo que ocurre mientras el usuario no pulse "cancelar" */
 while(calculadora()){}
 
 
