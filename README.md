@@ -10,9 +10,9 @@ Esta aplicación implementa una calculadora sencilla con las siguientes funciona
 
 ## Uso
 
-1. Abre el archivo `index.html` en tu navegador web.
+1. Abre el archivo `index.html` en tu navegador web. Pulsa F12 para mostrar la consola.
 2. La aplicación te pedirá que selecciones una operación.
-3. En la primera ejecución, cancela la operación y recarga la página para el correcto funcionamiento de la consola.
+3. En la primera ejecución, cancela la ejecución y recarga la página para el correcto funcionamiento de la consola.
 4. Introduce los operandos según sea necesario.
 5. El resultado se mostrará en la consola del navegador.
 6. Puedes ver el historial de operaciones introduciendo "historial" cuando se te pida la operación.
