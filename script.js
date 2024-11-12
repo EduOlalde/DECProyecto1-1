@@ -63,11 +63,11 @@ function validarOperacion() {
 }
 
 /* Función de validación de introducción de números.
-    Esta función se encarga de asegurar que el usuario introduce un número. La función
-    muestra un mensaje particular basado en el parámetro introducido.
+    Esta función se encarga de asegurar que el usuario introduce un número. 
     Permite retornar un número real o null, facilitando la funcionalidad de
-    cancelación de operación. */
-function validarInput(mensaje){
+    cancelación de operación.
+    Se añade un parámetro para personalizar el mensaje, que incluye un mensaje por defecto */
+function validarInput(mensaje = "Introduzca un número"){
 
     /* Para implementar la funcionalidad de que el usuario pueda cancelar una operación, 
     se recoge el número de forma directa, y se evalúa si la variable es == null, lo que
@@ -150,7 +150,7 @@ function agregarAlHistorial(num1, num2, tipo, resultado) {
         operando2: num2,
         tipoOperacion: tipo,
         resultado: resultado,
-        fecha: new Date().toLocaleString() // Pese a que no se utiliza, puede ser útil guardar la fecha y hora de la operación
+        fecha: new Date().toLocaleString()
     };
 
     /* Se declara una variable tipo array en la que se recupera el historial almacenado y se añade la
@@ -158,14 +158,14 @@ function agregarAlHistorial(num1, num2, tipo, resultado) {
     let historial = recuperarHistorial();
     historial.push(operacionObjeto);
 
+    /* Se guarda el historial en el almacenamiento local */
+    guardarHistorial(historial);
+
     /* El historial tendrá un límite de 10 operaciones, por lo tanto se elimina el primer elemento 
     en caso de que la longitud del array sea >= 10. Se usa un bucle while en lugar de una estructura
     if(historial.lenght == 10) para controlar posibles errores que provoquen que el historial haya
     superado los 10 elementos, aunque el código no permita esa situación. */ 
-    while (historial.length > 10) historial.shift();
-
-    /* Finalmente se guarda el historial en el almacenamiento local */
-    guardarHistorial(historial);
+    while (historial.length >= 10) historial.shift();
 }
 
 /* Función que muestra todos los valores historial, controlando si está vacío */
@@ -179,9 +179,11 @@ function mostrarHistorial(){
     if(historial.length != 0){
         for(let op of historial){
             if(op.tipoOperacion == "√")
-                console.log(`\t${op.tipoOperacion}${op.operando1} = ${op.resultado}`);
+                console.log(`\tOperación: ${op.tipoOperacion}${op.operando1}`
+                + ` = ${op.resultado}\n\t\tFecha: ${op.fecha}`);
             else
-            console.log(`\t${op.operando1} ${op.tipoOperacion} ${op.operando2} = ${op.resultado}`);
+            console.log(`\tOperación: ${op.operando1} ${op.tipoOperacion} ${op.operando2}`
+                + ` = ${op.resultado}\n\t\tFecha: ${op.fecha}`);
         }
     }
     else{
@@ -266,7 +268,7 @@ function calculadora(){
     deba ejecutar la operación con una estructura if/else if */
 
     /* En caso de que el usuario trate de dividir entre 0, se lanzará una alerta informando
-    de que esa operación no se puede realizar. En caso contrario, se realizará la operación */
+    de que esa operación no se puede realizar. */
     
     if(num2 == 0 && tipo == "/"){
         alert(`No es posible dividir entre 0`);
@@ -291,16 +293,12 @@ function calculadora(){
         /* Se realiza la operación, guardando el resultado en una variable. */
         let resultado = operacion(num1, num2, tipo);
 
-        /* Se guarda una cadena de caracteres de toda la operación en el array de historial, cadena
-        cuyo formato depende del tipo de operación, y se muestra por consola. */
-        let cadena; 
-
+        /* Se muestra por consola la operación en forma de cadena de caracteres
+        cuyo formato depende del tipo de operación. */
         if(tipo == "√")
-            cadena = `${tipo}${num1} = ${resultado}`;  
+            console.log(`${tipo}${num1} = ${resultado}`);  
         else
-            cadena = `${num1} ${tipo} ${num2} = ${resultado}`;
-        
-        console.log(cadena);
+            console.log(`${num1} ${tipo} ${num2} = ${resultado}`);
 
         /* Finalmente se agrega la nueva operación al historial */
         agregarAlHistorial(num1, num2, tipo, resultado);
